@@ -6,7 +6,7 @@ class KnowledgeRetrievalModule:
     """
     知识获取模块，负责论文检索和LLM咨询
     """
-    def __init__(self, model: str = "deepseek-r1"):
+    def __init__(self, model: str = "deepseek-reasoner"):
         """
         初始化知识获取模块
 
@@ -93,7 +93,7 @@ class KnowledgeRetrievalModule:
         Returns:
             LLM的回答
         """
-        model = "deepseek-r1" if use_reasoning else self.model
+        model = "deepseek-reasoner" if use_reasoning else self.model
 
         prompt = f"""
         我是一名人工智能专业的博士生，正在研究LLM-Agent与数据挖掘的交叉领域。请作为专业的AI研究顾问，回答我以下问题:
@@ -110,8 +110,20 @@ class KnowledgeRetrievalModule:
                 temperature=0.3  # 较低的温度以获得更准确的知识
             )
 
-            # 由于deepseek-r1模型可能不支持reasoning_content属性，统一返回content
-            return response.choices[0].message.content
+            # 对于推理模型，获取reasoning_content和content
+            if use_reasoning:
+                try:
+                    reasoning = response.choices[0].message.reasoning_content
+                    answer = response.choices[0].message.content
+                    return {
+                        "reasoning": reasoning,
+                        "answer": answer
+                    }
+                except AttributeError:
+                    # 如果模型不支持reasoning_content，则只返回content
+                    return response.choices[0].message.content
+            else:
+                return response.choices[0].message.content
 
         except Exception as e:
             error_message = f"LLM咨询出错: {str(e)}"

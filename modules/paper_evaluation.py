@@ -6,7 +6,7 @@ class PaperEvaluationModule:
     """
     论文评估模块，负责评估论文质量并提供修改建议
     """
-    def __init__(self, model: str = "deepseek-r1"):
+    def __init__(self, model: str = "deepseek-reasoner"):
         """
         初始化论文评估模块
 
