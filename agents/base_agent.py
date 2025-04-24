@@ -49,11 +49,29 @@ class BaseAgent:
         # 添加用户消息到历史
         self.conversation_history.append({"role": "user", "content": message})
 
+        # 确保系统消息在消息序列的开头
+        messages_to_send = []
+        system_message_found = False
+
+        # 检查是否已有系统消息，并确保它在第一位
+        for msg in self.conversation_history:
+            if msg["role"] == "system":
+                if not system_message_found:
+                    messages_to_send.insert(0, msg)  # 将系统消息放在最前面
+                    system_message_found = True
+                # 忽略其他系统消息
+            else:
+                messages_to_send.append(msg)
+
+        # 如果没有系统消息但有系统提示词，添加一个
+        if not system_message_found and self.system_prompt:
+            messages_to_send.insert(0, {"role": "system", "content": self.system_prompt})
+
         # 调用API获取回复
         try:
             response = self.client.chat.completions.create(
                 model=self.model,
-                messages=self.conversation_history,
+                messages=messages_to_send,
                 temperature=temperature
             )
             reply = response.choices[0].message.content

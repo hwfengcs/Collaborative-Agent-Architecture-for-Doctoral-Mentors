@@ -39,7 +39,11 @@ class PaperEvaluationModule:
         Returns:
             评估结果，包含总体评分、各维度评分和修改建议
         """
-        prompt = f"""
+        # 系统提示词
+        system_prompt = """你是一位经验丰富的学术论文评审专家，擅长对论文进行全面、客观、严谨的评估。你的评估应基于学术标准，同时考虑实际应用价值。"""
+
+        # 用户提示词
+        user_prompt = f"""
         请对以下论文进行全面评估：
 
         {"目标发表会议/期刊：" + target_venue if target_venue else ""}
@@ -83,9 +87,13 @@ class PaperEvaluationModule:
         """
 
         try:
+            # 确保系统消息在消息序列的开头
             response = self.client.chat.completions.create(
                 model=self.model,
-                messages=[{"role": "user", "content": prompt}],
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
                 temperature=0.3  # 较低的温度以获得更一致的评估
             )
             result = response.choices[0].message.content
@@ -109,8 +117,12 @@ class PaperEvaluationModule:
         Returns:
             详细的改进计划
         """
-        prompt = f"""
-        您是一位经验丰富的学术导师，请基于以下论文内容和评估结果，生成一份详细的改进计划：
+        # 系统提示词
+        system_prompt = """你是一位经验丰富的学术导师，擅长为博士生提供具体、可操作的论文改进建议。你的建议应该基于评估结果，并提供明确的改进方向和具体步骤。"""
+
+        # 用户提示词
+        user_prompt = f"""
+        请基于以下论文评估结果，生成一份详细的改进计划：
 
         评估结果：
         {evaluation_result}
@@ -127,9 +139,13 @@ class PaperEvaluationModule:
         """
 
         try:
+            # 确保系统消息在消息序列的开头
             response = self.client.chat.completions.create(
                 model=self.model,
-                messages=[{"role": "user", "content": prompt}],
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
                 temperature=0.5
             )
             return response.choices[0].message.content
@@ -150,8 +166,12 @@ class PaperEvaluationModule:
         Returns:
             论文发表就绪性评估
         """
-        prompt = f"""
-        请作为学术审稿人，评估以下论文是否达到在{target_venue}发表的标准：
+        # 系统提示词
+        system_prompt = f"""你是一位经验丰富的{target_venue}学术审稿人，擅长评估论文是否达到发表标准。你的评估应该全面、客观、严谨，并提供具体的改进建议。"""
+
+        # 用户提示词
+        user_prompt = f"""
+        请评估以下论文是否达到在{target_venue}发表的标准：
 
         论文内容：
         {paper_content}
@@ -180,9 +200,13 @@ class PaperEvaluationModule:
         """
 
         try:
+            # 确保系统消息在消息序列的开头
             response = self.client.chat.completions.create(
                 model=self.model,
-                messages=[{"role": "user", "content": prompt}],
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
                 temperature=0.3
             )
             result = response.choices[0].message.content

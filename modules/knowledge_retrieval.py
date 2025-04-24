@@ -32,8 +32,12 @@ class KnowledgeRetrievalModule:
         Returns:
             论文信息列表 [{"title": "论文标题", "authors": "作者", "year": "年份", "abstract": "摘要", "link": "链接"}]
         """
-        prompt = f"""
-        作为一个专业的学术搜索引擎，请根据以下查询生成{max_results}篇最相关的论文信息，特别关注互联网内容挖掘、数据分析和实际应用价值方面的研究：
+        # 系统提示词
+        system_prompt = """你是一个专业的学术搜索引擎，专注于提供高质量的学术论文信息，特别是互联网内容挖掘、数据分析和实际应用价值方面的研究。"""
+
+        # 用户提示词
+        user_prompt = f"""
+        请根据以下查询生成{max_results}篇最相关的论文信息，特别关注互联网内容挖掘、数据分析和实际应用价值方面的研究：
 
         查询: {query}
 
@@ -82,9 +86,13 @@ class KnowledgeRetrievalModule:
         """
 
         try:
+            # 确保系统消息在消息序列的开头
             response = self.client.chat.completions.create(
                 model=self.model,
-                messages=[{"role": "user", "content": prompt}],
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
                 temperature=0.7
             )
             result = response.choices[0].message.content
@@ -110,8 +118,12 @@ class KnowledgeRetrievalModule:
         """
         model = "deepseek-reasoner" if use_reasoning else self.model
 
-        prompt = f"""
-        我是一名人工智能专业的博士生，正在研究LLM-Agent与互联网数据挖掘的交叉领域，特别关注实际应用场景和可量化的业务价值。请作为既有学术背景又有工业界经验的AI研究顾问，回答我以下问题:
+        # 系统提示词
+        system_prompt = """你是一位既有学术背景又有工业界经验的AI研究顾问，专注于LLM-Agent与互联网数据挖掘的交叉领域研究。你提供的建议应基于实证研究和已发表文献，注重实际应用场景和可量化的业务价值。"""
+
+        # 用户提示词
+        user_prompt = f"""
+        我是一名人工智能专业的博士生，正在研究LLM-Agent与互联网数据挖掘的交叉领域，特别关注实际应用场景和可量化的业务价值。请回答我以下问题:
 
         {query}
 
@@ -128,9 +140,13 @@ class KnowledgeRetrievalModule:
         """
 
         try:
+            # 确保系统消息在消息序列的开头
             response = self.client.chat.completions.create(
                 model=model,
-                messages=[{"role": "user", "content": prompt}],
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
                 temperature=0.3  # 较低的温度以获得更准确的知识
             )
 
