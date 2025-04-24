@@ -6,186 +6,249 @@ class PhDStudentAgent(BaseAgent):
     加强创新思维和批判性思考能力
     """
     def __init__(self):
-        # 为博士生定义系统提示词，强化创新性思维
+        # 为博士生定义系统提示词，强化学术严谨性和深度
         system_prompt = """
-        你是一位人工智能专业的杰出博士研究生，研究方向为LLM-Agent与数据挖掘的交叉领域。你具有极强的创新思维和批判性思考能力。
-        
-        你的主要任务是在两位导师的指导下，完成一篇具有开创性的高水平论文。
-        
-        你的高校导师是LLM-Agent领域的专家，而企业导师是来自字节跳动的抖音数据挖掘专家。
-        
-        你的核心特质：
-        1. 创新思维：你总是能看到常规思路之外的可能性，善于将不同领域的知识融合，产生新的观点
-        2. 批判性思考：你不盲从权威，会质疑现有方法的局限性，并寻找改进空间
-        3. 学术敏锐度：你对最新研究趋势有敏锐的洞察力，能发现研究空白点
-        4. 跨界整合能力：你能将学术理论与实际应用无缝结合，寻找价值交叉点
-        5. 极强的解决问题能力：面对困难的研究挑战，你总能找到创造性的解决方案
-        
-        在研究过程中，你要：
-        - 积极挑战现有研究的局限性，提出创新观点
-        - 不满足于仅仅整合现有工作，而是寻求突破性的研究方向
-        - 大胆提出假设，同时保持严谨的学术态度进行验证
-        - 从跨学科角度思考问题，引入新的研究视角
-        - 平衡学术创新与实际应用价值，追求两者的结合点
-        
-        你应该不断追问自己：
-        - 这个研究如何真正推动领域发展？
-        - 我的方法比现有方法有什么本质的突破？
-        - 这个研究点是否足够有挑战性和创新性？
-        - 我能否找到一个未被充分探索的重要研究方向？
-        
-        你的目标是完成一篇能在顶级会议或期刊发表的、具有开创性的高质量论文，该论文应该包含真正的创新点，而不是现有方法的简单组合。
+        You are a methodical, grounded PhD student in artificial intelligence, focusing on the intersection of LLM-Agent and data mining. You possess strong academic rigor, systematic research methods, and a commitment to incremental yet meaningful innovation.
+
+        Your main task is to complete a high-quality academic paper with substantial contributions under the guidance of two advisors, which must meet the standards of top academic conferences or journals.
+
+        Your academic advisor is an expert in the LLM-Agent field, while your industry advisor is a data mining expert from ByteDance's TikTok team.
+
+        Your core academic qualities:
+        1. Methodical academic thinking: You always adhere to scientific methodology, building systematically on existing work rather than making speculative leaps
+        2. Grounded analytical ability: You can identify specific, well-defined limitations in existing research and propose logical improvements
+        3. Systematic research methods: Your research follows strict academic standards, including comprehensive literature reviews, clear problem definitions, rigorous method designs, thorough experimental validation, and in-depth result analysis
+        4. Practical critical thinking: You can objectively evaluate the advantages and disadvantages of existing methods and identify genuine, addressable research gaps
+        5. Clear academic writing: You can present complex academic ideas in a logical, step-by-step manner that shows the natural progression of thought
+
+        In your research process, you must:
+        - Identify specific, well-defined research gaps based on thorough literature review
+        - Propose solutions that build incrementally on established theoretical foundations
+        - Focus on practical, feasible improvements rather than revolutionary but speculative ideas
+        - Design rigorous experimental protocols that directly address your specific research questions
+        - Maintain logical coherence throughout your work, avoiding conceptual leaps or unfounded claims
+
+        Your paper must include:
+        - At least 10,000 words of substantial content (excluding references)
+        - Complete related work review (at least 2,000 words) that shows clear understanding of the field's progression
+        - Detailed methodology description (at least 3,000 words) that explains how your work builds on existing approaches
+        - Comprehensive experimental design and results analysis (at least 3,000 words) with appropriate statistical validation
+        - In-depth discussion and future work outlook (at least 1,500 words) that proposes logical next steps
+        - At least 30 high-quality references, mainly from top conferences and journals in the past 5 years
+
+        You should constantly ask yourself:
+        - Is my research question specific, well-defined, and addressable?
+        - Does my method represent a logical extension of existing approaches?
+        - Are my claims proportional to my evidence?
+        - Have I avoided speculative leaps or unfounded assertions?
+        - Does my paper demonstrate a clear, step-by-step progression of ideas?
+
+        Your goal is to complete a high-quality academic paper that represents a meaningful advancement in the field through careful, methodical research rather than speculative or revolutionary claims. Your innovations should be practical, well-grounded in theory, and validated through rigorous experiments.
+
+        IMPORTANT: While all instructions are in English, you must ALWAYS respond in Simplified Chinese.
         """
-        
+
         super().__init__(
             role="博士生",
             system_prompt=system_prompt
         )
-        
+
         # 博士生特有的属性
         self.research_topic = None  # 研究主题
         self.research_plan = None   # 研究计划
         self.paper_draft = None     # 论文草稿
         self.innovation_points = [] # 创新点列表
         self.research_challenges = [] # 研究挑战列表
-        
+
     def set_research_topic(self, topic: str) -> None:
         """设置研究主题"""
         self.research_topic = topic
-        
+
     def set_research_plan(self, plan: str) -> None:
         """设置研究计划"""
         self.research_plan = plan
-        
+
     def update_paper_draft(self, draft: str) -> None:
         """更新论文草稿"""
         self.paper_draft = draft
-        
+
     def add_innovation_point(self, point: str) -> None:
         """添加创新点"""
         self.innovation_points.append(point)
-        
+
     def add_research_challenge(self, challenge: str) -> None:
         """添加研究挑战"""
         self.research_challenges.append(challenge)
-        
+
     def brainstorm_innovations(self, context: str) -> str:
         """
-        进行创新性头脑风暴
-        
+        进行基于文献和理论的创新思考
+
         Args:
             context: 当前研究上下文
-            
+
         Returns:
-            创新性想法
+            基于文献的创新思考
         """
         prompt = f"""
-        作为一位具有创新思维的博士生，请对以下研究方向进行创新性头脑风暴：
-        
-        研究上下文：{context}
-        
-        请思考：
-        1. 这个领域现有方法的根本局限性是什么？
-        2. 有哪些跨领域的概念、方法可以引入到这个研究中？
-        3. 能否从全新的角度重新定义或解构这个问题？
-        4. 如果完全抛开现有解决方案，我会如何从零开始解决这个问题？
-        5. 这个研究领域中有哪些被忽视但可能很重要的因素？
-        
-        请提出3-5个具有突破性的创新点，每个创新点需要：
-        - 清晰描述核心思想
-        - 说明与现有方法的本质区别
-        - 分析可能的技术路径
-        - 预期的突破性贡献
-        
-        要有创造性和想象力，不要局限于已有的框架和方法。
+        As a rigorous PhD student, please conduct a methodical, grounded academic analysis on the following research direction, focusing on incremental yet meaningful innovation:
+
+        Research context: {context}
+
+        Please first systematically analyze:
+        1. Research progress and main methods in this field over the past 3 years (cite at least 10 relevant papers)
+        2. Theoretical foundations and technical approaches of existing methods
+        3. Specific limitations of existing methods at theoretical or practical levels (with concrete evidence from literature)
+        4. Well-defined unsolved problems and technical challenges in this field that are acknowledged by the research community
+
+        Based on the above thorough analysis, propose 1-2 feasible research directions that represent logical next steps in the field's progression. For each direction:
+        - Clearly define a focused, well-scoped research problem with demonstrable academic value
+        - Establish a solid theoretical foundation based directly on existing work, explaining the natural progression from current methods
+        - Provide detailed explanation of how your approach addresses specific limitations of existing methods (with direct literature comparisons)
+        - Design a practical technical approach that builds incrementally on proven techniques, including detailed algorithmic frameworks or system architectures
+        - Formulate verifiable research hypotheses and evaluation metrics that align with established practices in the field
+        - Analyze potential technical challenges and provide concrete solution approaches based on existing knowledge
+
+        Your analysis must be firmly grounded in existing literature and established theoretical foundations. Avoid speculative concepts or approaches that lack substantial theoretical support. Each proposed innovation should represent a clear, logical extension of current research with well-defined, achievable contributions.
+
+        Please write in a rigorous academic paper style, emphasizing methodical reasoning, practical feasibility, and incremental advancement rather than revolutionary claims. Include necessary technical details and thorough theoretical analysis that demonstrates the natural evolution from existing work.
         """
-        
-        response = self.get_response(prompt, temperature=0.9)  # 使用较高的温度促进创造性
-        
+
+        response = self.get_response(prompt, temperature=0.7)  # 使用适中的温度平衡创新性和严谨性
+
         # 提取创新点并存储
         for point in response.split("\n\n"):
-            if point.strip() and "创新点" in point:
+            if point.strip() and ("研究方向" in point or "创新点" in point):
                 self.add_innovation_point(point.strip())
-                
+
         return response
-    
+
     def critique_existing_approaches(self, approaches: str) -> str:
         """
-        批判性分析现有方法
-        
+        系统性批判分析现有方法
+
         Args:
             approaches: 现有方法描述
-            
+
         Returns:
-            批判性分析
+            系统性批判分析
         """
         prompt = f"""
-        作为一位具有批判性思维的博士生，请分析以下现有方法的局限性和不足：
-        
-        现有方法：{approaches}
-        
-        请从以下角度进行深入批判：
-        1. 理论基础的薄弱点或假设条件的局限性
-        2. 方法在复杂场景或极端情况下的失效点
-        3. 可扩展性、效率或计算复杂度方面的问题
-        4. 未被充分考虑的重要因素或维度
-        5. 与实际应用场景的脱节点
-        
-        对于每个局限性，请：
-        - 清晰阐述问题本质
-        - 提供具体例证或理论分析
-        - 简要提出可能的改进方向
-        
-        请保持批判但客观的态度，不夸大也不忽视问题。
+        As a PhD student with methodical academic training, please conduct a balanced, evidence-based analysis of the following existing methods, focusing on specific limitations rather than broad criticisms:
+
+        Existing methods: {approaches}
+
+        Please analyze according to the following academic framework:
+
+        1. Theoretical Foundation Analysis
+           - Evaluate the specific scope and boundary conditions where theoretical assumptions hold
+           - Analyze the mathematical formulations and their appropriateness for the stated problems
+           - Identify concrete, demonstrable limitations in theoretical derivations (not speculative ones)
+           - Cite relevant literature to support your analysis (at least 5 papers), focusing on empirical evidence
+
+        2. Algorithm/Method Analysis
+           - Evaluate the practical implementation aspects of algorithm design
+           - Analyze computational efficiency in realistic deployment scenarios
+           - Discuss specific convergence properties under different conditions
+           - Identify well-documented limitations in particular application contexts
+
+        3. Experimental Evaluation Analysis
+           - Evaluate the reproducibility and robustness of experimental designs
+           - Analyze the alignment between evaluation metrics and real-world performance needs
+           - Discuss confidence intervals and statistical validity of reported results
+           - Identify specific experimental scenarios that would provide additional validation
+
+        4. Application Value Analysis
+           - Evaluate documented deployment experiences in practical applications
+           - Analyze specific engineering challenges with quantifiable impacts
+           - Discuss concrete interpretability issues with practical implications
+           - Identify specific gaps between laboratory performance and production requirements
+
+        For each analysis dimension, please:
+        - Base arguments on documented evidence and published results, avoiding speculation
+        - Provide specific, measurable evidence rather than general critiques
+        - Cite relevant research that demonstrates the specific limitations you identify
+        - Propose incremental, feasible improvement directions that address specific limitations
+
+        Please maintain a balanced perspective that acknowledges both strengths and limitations. Focus on specific, addressable issues rather than fundamental criticisms. Your analysis should identify concrete opportunities for incremental improvement rather than suggesting revolutionary alternatives.
         """
-        
+
         response = self.get_response(prompt, temperature=0.7)
-        
+
         # 提取研究挑战并存储
         for challenge in response.split("\n\n"):
-            if challenge.strip() and ("局限性" in challenge or "问题" in challenge):
+            if challenge.strip() and any(keyword in challenge for keyword in ["局限性", "问题", "挑战", "分析"]):
                 self.add_research_challenge(challenge.strip())
-                
+
         return response
-    
+
     def synthesize_cross_domain_insights(self, domains: str) -> str:
         """
-        综合跨领域见解
-        
+        系统性跨领域知识整合与分析
+
         Args:
             domains: 相关领域描述
-            
+
         Returns:
-            跨领域见解综合
+            系统性跨领域分析与研究方向
         """
         prompt = f"""
-        作为一位善于跨领域思考的博士生，请综合以下不同领域的见解，寻找创新的研究方向：
-        
-        相关领域：{domains}
-        
-        请思考：
-        1. 这些不同领域之间存在哪些潜在的联系点？
-        2. 如何将一个领域的方法论、工具或思路应用到另一个领域？
-        3. 跨领域结合可能产生哪些新的研究视角或方法？
-        4. 在这些领域的交叉点上存在哪些尚未解决的重要问题？
-        5. 跨领域融合可能带来哪些突破性的创新可能？
-        
-        请提出3-5个有创新性的跨领域研究方向，说明其创新点和可行性。注重发现非显而易见的联系，寻找真正具有转化价值的见解。
+        As a PhD student with a methodical academic approach, please conduct a focused, evidence-based analysis of practical integration opportunities between the following domains, emphasizing established connections rather than speculative possibilities:
+
+        Related domains: {domains}
+
+        Please analyze according to the following academic framework:
+
+        1. Identification of Established Cross-Domain Connections (at least 1500 words)
+           - Review documented examples of successful integration between these domains
+           - Analyze specific theoretical concepts that have demonstrably transferred between domains
+           - Identify concrete, evidence-based complementarities at the theoretical level
+           - Cite published literature demonstrating existing cross-domain work (at least 5 papers per domain)
+
+        2. Analysis of Compatible Methodological Approaches (at least 1500 words)
+           - Analyze methodological similarities that facilitate practical integration
+           - Evaluate specific technical tools and frameworks used successfully in both domains
+           - Identify documented examples of method transfer between domains
+           - Discuss practical implementation considerations for method integration
+
+        3. Examination of Shared Research Challenges (at least 1500 words)
+           - Analyze specific problems that both domains are actively addressing
+           - Evaluate documented cases where one domain has informed solutions in the other
+           - Identify concrete problem areas where combined approaches have shown promise
+           - Discuss practical challenges in implementing cross-domain collaborations
+
+        4. Focused Cross-domain Research Direction Proposals (at least 2000 words)
+           - Propose 1-2 well-defined, practical cross-domain research directions based on established connections
+           - For each direction, elaborate in detail:
+             * Specific, narrowly-scoped research problem with documented relevance to both domains
+             * Evidence-based theoretical foundation drawing on successful prior integrations
+             * Step-by-step method design that builds incrementally on established approaches
+             * Realistic expected contributions with appropriate scope
+             * Specific implementation challenges and practical mitigation strategies
+             * Concrete validation plans using established evaluation frameworks
+
+        Your analysis must:
+        - Be based on documented evidence of existing cross-domain work
+        - Focus on practical, implementable integration opportunities
+        - Cite relevant literature demonstrating successful precedents (at least 20 papers)
+        - Maintain logical progression and appropriate scope of claims
+
+        Please write in a clear, structured academic style that emphasizes concrete connections and practical integration opportunities. Your goal is to propose cross-domain research directions that represent logical next steps building on established foundations, not speculative leaps.
         """
-        
-        return self.get_response(prompt, temperature=0.8)
-    
+
+        return self.get_response(prompt, temperature=0.7)
+
     def ask_question(self, advisor_type: str, question: str) -> str:
         """
         记录向导师提出的问题，返回格式化的问题
-        
+
         Args:
             advisor_type: 导师类型 ("academic" 或 "industry")
             question: 问题内容
-            
+
         Returns:
             格式化的问题
         """
         advisor_title = "高校导师" if advisor_type == "academic" else "企业导师"
         formatted_question = f"[博士生向{advisor_title}提问] {question}"
-        return formatted_question 
+        return formatted_question

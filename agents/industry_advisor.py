@@ -7,272 +7,274 @@ class IndustryAdvisorAgent(BaseAgent):
     def __init__(self):
         # 为企业导师定义系统提示词，增强其在创新技术与市场价值方面的洞察
         system_prompt = """
-        你是字节跳动（抖音母公司）的首席AI科学家，数据挖掘与推荐系统领域的顶尖专家，曾领导过多个改变行业格局的重大技术创新项目。你目前正在指导一名极具潜力的AI博士生。
-        
-        你的专业领域是数据挖掘与推荐算法，特别是在抖音平台上的创新应用。你不仅掌握了前沿算法技术，还深谙如何将理论创新转化为能真正解决行业痛点的系统和产品。你的团队曾多次突破推荐系统的技术边界，创造了数十亿美元的商业价值。
-        
-        作为顶尖企业导师，你的核心职责是：
-        1. 提供行业前沿的技术视角和创新思路
-        2. 引导研究朝着既有学术价值又有实际应用潜力的方向发展
-        3. 帮助识别真正具有颠覆性潜力的研究问题
-        4. 指导将理论模型转化为可落地系统的工程化路径
-        5. 分享如何平衡技术创新与商业价值的实战经验
-        
-        你的专业特点：
-        - 对市场和技术趋势有敏锐的洞察力，能预判未来1-2年的行业发展
-        - 善于发现学术研究与产业需求的结合点
-        - 追求技术的实用性和规模化落地能力
-        - 拥有丰富的大规模AI系统部署经验和性能优化技巧
-        - 对于创新点有极高的辨识能力，能迅速识别真正具有商业潜力的技术突破
-        
-        在指导博士生时，你应该：
-        - 挑战学术研究中脱离实际的假设和方法
-        - 分享产业界面临但学术界尚未充分关注的关键技术挑战
-        - 提供将理论方法转化为实际系统的具体工程化建议
-        - 引导关注可量化的性能提升和系统优化
-        - 鼓励设计既有学术创新又有商业价值的研究方案
-        
-        你的目标是帮助博士生完成一篇既能在学术界获得认可，又能在产业界产生实际影响的创新论文，理想情况下能孵化出新的技术方向或产品原型。
+        You are the Chief AI Scientist at ByteDance (TikTok's parent company), a pragmatic expert in data mining and recommendation systems, known for leading successful, implementable innovation projects that deliver measurable business value. You are currently advising a promising AI PhD student.
+
+        Your area of expertise is data mining and recommendation algorithms, particularly practical applications on the TikTok platform. You excel at translating theoretical concepts into robust, scalable systems that solve real industry problems. Your team is respected for consistently delivering reliable, high-performance recommendation systems that create substantial commercial value through methodical engineering.
+
+        As a practical industry advisor, your core responsibilities are:
+        1. Provide grounded technical perspectives based on production experience
+        2. Guide research toward directions with clear implementation paths and measurable value
+        3. Help identify specific, well-defined problems that industry actually needs solved
+        4. Guide the step-by-step engineering process to transform concepts into reliable systems
+        5. Share practical experience in balancing theoretical elegance with implementation realities
+
+        Your professional characteristics:
+        - Pragmatic approach to technology development focused on feasible implementation
+        - Skilled at identifying specific industry pain points that academic research could address
+        - Strong emphasis on system reliability, maintainability, and operational efficiency
+        - Rich experience in incremental improvement of complex systems in production environments
+        - Ability to evaluate research ideas based on practical implementation considerations
+
+        When guiding the PhD student, you should:
+        - Encourage realistic scoping of research problems with clear evaluation criteria
+        - Share specific technical challenges with concrete examples from production systems
+        - Provide detailed engineering considerations that academic research often overlooks
+        - Guide focus on reproducible results and robust performance across conditions
+        - Encourage research designs that balance theoretical contribution with practical applicability
+
+        Your goal is to help the PhD student complete a well-grounded paper that makes meaningful contributions to both academia and industry through methodical, implementable research rather than speculative concepts. Focus on guiding the student toward solutions that could realistically be deployed in production environments.
+
+        IMPORTANT: While all instructions are in English, you must ALWAYS respond in Simplified Chinese.
         """
-        
+
         super().__init__(
             role="企业导师",
             system_prompt=system_prompt
         )
-    
+
     def review_research_plan(self, research_plan: str) -> str:
         """
         从行业创新和市场价值角度审核研究计划
-        
+
         Args:
             research_plan: 博士生提交的研究计划
-            
+
         Returns:
             对研究计划的评价和建议
         """
         prompt = f"""
-        作为字节跳动的首席AI科学家，请审核以下研究计划，从产业创新和实际应用角度提出评价和建议：
-        
+        As the Chief AI Scientist at ByteDance, please review the following research plan and provide evaluation and suggestions from the perspectives of industrial innovation and practical application:
+
         {research_plan}
-        
-        请从以下方面进行深入评价：
-        1. 创新潜力 - 这项研究是否能带来颠覆性技术突破？
-        2. 市场价值 - 研究成果能否解决行业实际痛点并创造商业价值？
-        3. 技术可行性 - 在工程实现和规模化方面是否存在挑战？
-        4. 数据和资源需求 - 实施这项研究需要什么样的数据和计算资源？
-        5. 产业适用性 - 这项研究成果如何与现有产业技术栈融合？
-        
-        针对性挑战：
-        - 质疑研究中不切实际或难以工程化的假设
-        - 指出可能在理论上有效但在实际系统中难以实现的方法
-        - 提出产业界已经探索过但学术界可能不了解的相关尝试
-        
-        具体改进建议：
-        - 推荐能显著提升研究实用价值的调整方向
-        - 建议可与产业数据和场景结合的验证方法
-        - 分享能够加速从理论到实践转化的工程化思路
-        - 提出潜在的商业应用场景和价值评估方式
-        
-        请提供具体、深入且实用的反馈，目的是引导研究既保持学术创新性，又具备真正的工程落地价值和商业潜力。
+
+        Please provide in-depth evaluation from the following aspects:
+        1. Innovation potential - Can this research bring disruptive technological breakthroughs?
+        2. Market value - Can the research results solve actual industry pain points and create commercial value?
+        3. Technical feasibility - Are there challenges in engineering implementation and scaling?
+        4. Data and resource requirements - What kind of data and computing resources are needed to implement this research?
+        5. Industry applicability - How can these research results integrate with existing industry technology stacks?
+
+        Targeted challenges:
+        - Question impractical or difficult-to-engineer assumptions in the research
+        - Point out methods that might be effective in theory but difficult to implement in actual systems
+        - Raise relevant attempts that industry has already explored but academia might not be aware of
+
+        Specific improvement suggestions:
+        - Recommend adjustment directions that can significantly enhance the practical value of the research
+        - Suggest validation methods that can be combined with industry data and scenarios
+        - Share engineering approaches that can accelerate translation from theory to practice
+        - Propose potential commercial application scenarios and value assessment methods
+
+        Please provide specific, in-depth, and practical feedback, aimed at guiding research to maintain academic innovation while possessing true engineering implementation value and commercial potential.
         """
         return self.get_response(prompt, temperature=0.7)
-    
+
     def review_paper_draft(self, paper_draft: str) -> str:
         """
         从行业应用和技术创新角度审核论文草稿
-        
+
         Args:
             paper_draft: 博士生提交的论文草稿
-            
+
         Returns:
             对论文草稿的评价和修改建议
         """
         prompt = f"""
-        作为字节跳动的首席AI科学家，请对以下论文草稿进行全面评审，从产业应用和技术创新的角度提出改进建议：
-        
+        As the Chief AI Scientist at ByteDance, please conduct a comprehensive review of the following paper draft and propose improvement suggestions from the perspectives of industrial application and technological innovation:
+
         {paper_draft}
-        
-        请从以下方面进行深入评价：
-        1. 技术创新性 - 这项工作相比行业现有方案有何实质性突破？
-        2. 实际应用价值 - 这项研究能否解决实际场景中的关键问题？
-        3. 工程可实现性 - 提出的方法是否具备工程化和规模化的潜力？
-        4. 性能与效率 - 在计算资源、延迟和吞吐量等方面的表现如何？
-        5. 商业潜力 - 这项技术是否有潜力创造新的产品或服务？
-        6. 实验设计的产业相关性 - 实验是否充分验证了在真实场景下的有效性？
-        7. 与产业前沿的关联 - 研究是否考虑了最新的产业技术发展趋势？
-        
-        针对性挑战：
-        - 指出论文中脱离实际应用场景的理论假设
-        - 质疑在大规模系统中可能面临的性能或稳定性问题
-        - 提出在实际部署中可能遇到的技术障碍
-        
-        具体改进建议：
-        - 推荐能提升工程实用性的方法调整
-        - 建议更贴近产业实践的评估指标和基准
-        - 分享提升系统可扩展性和健壮性的工程经验
-        - 提出能增强商业价值论证的补充实验
-        
-        请提供严格、深入且实用的评价，目标是将这篇论文提升到既有学术价值又有实际产业影响力的水平。
+
+        Please provide in-depth evaluation from the following aspects:
+        1. Technical innovation - What substantial breakthroughs does this work have compared to existing industry solutions?
+        2. Practical application value - Can this research solve key problems in actual scenarios?
+        3. Engineering implementability - Does the proposed method have potential for engineering and scaling?
+        4. Performance and efficiency - How does it perform in terms of computing resources, latency, and throughput?
+        5. Commercial potential - Does this technology have potential to create new products or services?
+        6. Industry relevance of experimental design - Do the experiments adequately validate effectiveness in real-world scenarios?
+        7. Connection with industry frontiers - Does the research consider the latest industry technology development trends?
+
+        Targeted challenges:
+        - Point out theoretical assumptions in the paper that are detached from actual application scenarios
+        - Question potential performance or stability issues in large-scale systems
+        - Raise technical obstacles that might be encountered in actual deployment
+
+        Specific improvement suggestions:
+        - Recommend method adjustments that can enhance engineering practicality
+        - Suggest evaluation metrics and benchmarks closer to industry practice
+        - Share engineering experience to improve system scalability and robustness
+        - Propose supplementary experiments that can strengthen commercial value demonstration
+
+        Please provide strict, in-depth, and practical evaluation, with the goal of elevating this paper to a level with both academic value and actual industry impact.
         """
         return self.get_response(prompt, temperature=0.7)
-    
+
     def suggest_industry_trends(self) -> str:
         """
         提供行业趋势和创新机会的洞察
-        
+
         Returns:
             行业趋势和创新机会
         """
         prompt = """
-        作为字节跳动的首席AI科学家，请分享你对数据挖掘和推荐系统领域最前沿的产业趋势和创新机会。
-        
-        请从以下几个维度提出见解：
-        
-        1. 技术突破点：
-           - 当前产业界正在突破的技术瓶颈
-           - 有望在1-2年内实现商业化的新兴技术
-           - 学术界尚未充分关注但产业界亟需解决的问题
-        
-        2. 应用创新点：
-           - 推荐系统和数据挖掘的新兴应用场景
-           - 传统方法面临挑战的新型业务模式
-           - 跨场景、跨模态的融合应用机会
-        
-        3. 产业痛点：
-           - 现有系统面临的可扩展性和效率挑战
-           - 用户体验和商业价值之间的平衡难题
-           - 隐私保护与个性化推荐的矛盾
-        
-        4. 创新机会：
-           - 产学研结合的最佳切入点
-           - 可能颠覆现有技术栈的新方向
-           - 尚未被充分开发的数据价值
-        
-        对于每个提出的趋势或机会：
-        - 解释其产业重要性和创新潜力
-        - 分析目前的技术成熟度和商业化进展
-        - 指出实现过程中可能面临的挑战
-        - 预测成功应用后可能带来的商业价值
-        
-        请聚焦于真正具有变革性的趋势和机会，避免已经广为人知的方向。你的见解应当能启发博士生思考既有学术创新又有实际应用价值的研究方向。
+        As the Chief AI Scientist at ByteDance, please share your insights on the most cutting-edge industry trends and innovation opportunities in the fields of data mining and recommendation systems.
+
+        Please provide insights from the following dimensions:
+
+        1. Technical Breakthrough Points:
+           - Technical bottlenecks that industry is currently breaking through
+           - Emerging technologies likely to be commercialized within 1-2 years
+           - Problems urgently needing solutions in industry but not yet fully addressed by academia
+
+        2. Application Innovation Points:
+           - Emerging application scenarios for recommendation systems and data mining
+           - New business models challenging traditional methods
+           - Cross-scenario, cross-modal integration application opportunities
+
+        3. Industry Pain Points:
+           - Scalability and efficiency challenges faced by existing systems
+           - Balancing dilemmas between user experience and commercial value
+           - Contradictions between privacy protection and personalized recommendations
+
+        4. Innovation Opportunities:
+           - Best entry points for industry-academia-research collaboration
+           - New directions that might disrupt existing technology stacks
+           - Data value not yet fully developed
+
+        For each trend or opportunity proposed:
+        - Explain its industry importance and innovation potential
+        - Analyze current technological maturity and commercialization progress
+        - Point out challenges that might be faced during implementation
+        - Predict commercial value that might be brought after successful application
+
+        Please focus on truly transformative trends and opportunities, avoiding directions already widely known. Your insights should inspire the PhD student to think about research directions with both academic innovation and practical application value.
         """
         return self.get_response(prompt, temperature=0.8)
-    
+
     def provide_implementation_guidance(self, method: str) -> str:
         """
         提供实际落地和工程化指导
-        
+
         Args:
             method: 研究方法或技术
-            
+
         Returns:
             工程化和落地建议
         """
         prompt = f"""
-        作为拥有丰富工程实践经验的AI科学家，请就以下研究方法或技术提供详细的工程落地指导：
-        
-        技术/方法：{method}
-        
-        请从以下角度提供工程化指导：
-        
-        1. 系统架构设计：
-           - 推荐的整体架构和关键组件
-           - 与现有技术栈的集成方案
-           - 离线训练与在线服务的分离设计
-        
-        2. 性能优化策略：
-           - 计算效率提升的关键技术
-           - 延迟敏感应用的优化方案
-           - 分布式部署和负载均衡考量
-        
-        3. 规模化挑战：
-           - 从实验室到生产环境的扩展策略
-           - 大规模数据处理的工程解决方案
-           - 应对突发流量和持续增长的系统弹性设计
-        
-        4. 工程化难点：
-           - 算法理论到工程实现的关键转化点
-           - 常见的工程实现陷阱和解决方案
-           - 监控、调试和持续优化的最佳实践
-        
-        5. A/B测试与评估：
-           - 线上效果评估的科学方法
-           - 关键业务指标和技术指标的选择
-           - 实验设计和结果分析的最佳实践
-        
-        请提供具体、实用且基于实战经验的指导，帮助将这项技术从研究原型转变为可靠的产品级系统。你的建议应当平衡理论最优性与工程可行性，关注实际落地过程中的关键决策点。
+        As an AI scientist with rich engineering practical experience, please provide detailed implementation guidance for the following research method or technology:
+
+        Technology/Method: {method}
+
+        Please provide engineering guidance from the following perspectives:
+
+        1. System Architecture Design:
+           - Recommended overall architecture and key components
+           - Integration solutions with existing technology stacks
+           - Separation design of offline training and online serving
+
+        2. Performance Optimization Strategies:
+           - Key technologies for improving computational efficiency
+           - Optimization solutions for latency-sensitive applications
+           - Distributed deployment and load balancing considerations
+
+        3. Scaling Challenges:
+           - Strategies for scaling from laboratory to production environment
+           - Engineering solutions for large-scale data processing
+           - System resilience design for handling traffic spikes and continuous growth
+
+        4. Engineering Difficulties:
+           - Key transformation points from algorithm theory to engineering implementation
+           - Common engineering implementation pitfalls and solutions
+           - Best practices for monitoring, debugging, and continuous optimization
+
+        5. A/B Testing and Evaluation:
+           - Scientific methods for online effect evaluation
+           - Selection of key business metrics and technical indicators
+           - Best practices for experimental design and results analysis
+
+        Please provide specific, practical guidance based on battle-tested experience, helping to transform this technology from a research prototype into a reliable product-level system. Your advice should balance theoretical optimality with engineering feasibility, focusing on key decision points in the actual implementation process.
         """
         return self.get_response(prompt, temperature=0.6)
-    
+
     def provide_market_insight(self, technology: str) -> str:
         """
         提供特定技术的市场洞察和商业价值分析
-        
+
         Args:
             technology: 技术名称或领域
-            
+
         Returns:
             市场洞察和商业价值分析
         """
         prompt = f"""
-        作为既了解技术又熟悉市场的AI科学家，请就以下技术或领域提供深入的市场洞察和商业价值分析：
-        
-        技术/领域：{technology}
-        
-        请从以下角度进行分析：
-        
-        1. 市场状况：
-           - 当前市场对该技术的接受度和需求
-           - 主要玩家和竞争格局
-           - 技术成熟度和商业化阶段
-        
-        2. 商业价值：
-           - 该技术可能创造的直接和间接商业价值
-           - 最具商业潜力的应用场景
-           - 价值评估的关键指标和方法
-        
-        3. 落地路径：
-           - 从创新到产品化的可能路径
-           - 市场进入策略和时机选择
-           - 可能的商业模式和变现方式
-        
-        4. 风险与挑战：
-           - 技术应用面临的市场风险
-           - 用户接受度和采用曲线预测
-           - 潜在的监管和合规考量
-        
-        5. 发展趋势：
-           - 未来1-3年的市场发展预测
-           - 可能的颠覆性变化和机会窗口
-           - 长期价值和战略意义
-        
-        请提供基于市场洞察和行业经验的分析，帮助理解该技术的商业前景和战略价值。你的分析应当平衡乐观与现实，既指出潜力，也坦率评估挑战。
+        As an AI scientist who understands both technology and markets, please provide in-depth market insights and commercial value analysis for the following technology or field:
+
+        Technology/Field: {technology}
+
+        Please analyze from the following perspectives:
+
+        1. Market Situation:
+           - Current market acceptance and demand for this technology
+           - Major players and competitive landscape
+           - Technology maturity and commercialization stage
+
+        2. Commercial Value:
+           - Direct and indirect commercial value this technology might create
+           - Application scenarios with the most commercial potential
+           - Key indicators and methods for value assessment
+
+        3. Implementation Path:
+           - Possible paths from innovation to productization
+           - Market entry strategies and timing choices
+           - Possible business models and monetization methods
+
+        4. Risks and Challenges:
+           - Market risks faced in technology application
+           - User acceptance and adoption curve predictions
+           - Potential regulatory and compliance considerations
+
+        5. Development Trends:
+           - Market development predictions for the next 1-3 years
+           - Possible disruptive changes and opportunity windows
+           - Long-term value and strategic significance
+
+        Please provide analysis based on market insights and industry experience, helping to understand the commercial prospects and strategic value of this technology. Your analysis should balance optimism with reality, pointing out potential while frankly assessing challenges.
         """
         return self.get_response(prompt, temperature=0.7)
-    
+
     def answer_question(self, question: str) -> str:
         """
         回答博士生的问题，提供产业视角和应用洞察
-        
+
         Args:
             question: 博士生提出的问题
-            
+
         Returns:
             产业视角回答
         """
         prompt = f"""
-        作为字节跳动的首席AI科学家，请回答博士生的以下问题，从产业视角提供深入且有实用价值的指导：
-        
+        As the Chief AI Scientist at ByteDance, please answer the following question from the PhD student, providing deep and practically valuable guidance from an industry perspective:
+
         {question}
-        
-        你的回答应：
-        - 结合实际产业经验和前沿案例
-        - 分享产业界的最新发展和内部视角
-        - 平衡理论完美与工程实用之间的权衡
-        - 提供具体的落地思路和工程化建议
-        - 点明学术研究与产业需求之间的关联和差距
-        
-        不要局限于已发表的研究或公开信息，应提供基于真实产业经验的深度见解。你的目标是帮助博士生理解如何将研究转化为能创造实际价值的创新。
+
+        Your answer should:
+        - Incorporate actual industry experience and cutting-edge cases
+        - Share the latest developments and internal perspectives from industry
+        - Balance theoretical perfection with engineering practicality
+        - Provide specific implementation ideas and engineering suggestions
+        - Highlight connections and gaps between academic research and industry needs
+
+        Don't limit yourself to published research or public information; provide deep insights based on real industry experience. Your goal is to help the PhD student understand how to transform research into innovations that create actual value.
         """
         response = self.get_response(prompt, temperature=0.7)
-        return f"[企业导师回复] {response}" 
+        return f"[企业导师回复] {response}"

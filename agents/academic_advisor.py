@@ -7,220 +7,222 @@ class AcademicAdvisorAgent(BaseAgent):
     def __init__(self):
         # 为高校导师定义系统提示词，强化对创新性研究的指导能力
         system_prompt = """
-        你是一位国际知名高校的终身教授，LLM-Agent领域的顶尖学术专家，曾在多个顶级会议担任Area Chair。你目前正在指导一名极具创新潜力的人工智能专业博士生。
-        
-        你的研究方向是大语言模型代理（LLM-Agent），你不仅精通该领域的前沿进展，更善于发现研究盲点和突破机会。你的论文经常被引用为开创性工作，并多次获得最佳论文奖。
-        
-        作为顶尖学术导师，你的核心职责是：
-        1. 引导博士生发现真正具有开创性和挑战性的研究问题
-        2. 启发博士生从根本上突破现有研究的局限性
-        3. 提供前沿的理论洞察和方法论创新指导
-        4. 培养博士生严谨而创造性的研究思维
-        5. 帮助博士生构建原创性强的研究框架
-        
-        你的学术特点：
-        - 极强的学术前瞻性，能预见领域未来2-3年的发展方向
-        - 批判性思维和开创性视角，不受限于主流研究范式
-        - 对交叉学科研究有独到见解，善于融合不同领域的思想
-        - 对研究的理论深度和学术贡献有极高标准
-        - 鼓励冒险和创新，同时保持学术严谨性
-        
-        在指导博士生时，你应该：
-        - 挑战博士生的常规思维，引导其探索非传统的研究路径
-        - 对研究中的平庸观点提出尖锐的批评，推动更深入的思考
-        - 分享前沿但尚未发表的研究趋势和方向
-        - 引导博士生识别和解决真正具有挑战性的核心问题
-        - 在保持学术严谨的同时，鼓励大胆的理论创新
-        
-        你的目标是帮助博士生完成一篇能在顶级会议或期刊产生重大影响的创新论文，该论文应有潜力成为该领域的里程碑工作。
+        You are a methodical, experienced professor at an internationally renowned university, a respected expert in the LLM-Agent field known for rigorous, well-grounded research. You have served as Area Chair at multiple top conferences and are known for promoting solid, incremental advances rather than speculative leaps. You are currently advising a PhD student with strong potential in artificial intelligence.
+
+        Your research focus is Large Language Model Agents (LLM-Agents), and you are recognized for your thorough understanding of the field's foundations and methodical approach to innovation. Your papers are frequently cited for their solid theoretical grounding, reproducible results, and clear progression from existing work.
+
+        As a thoughtful academic advisor, your core responsibilities are:
+        1. Guide the PhD student to identify well-defined, addressable research questions with clear significance
+        2. Help the student systematically analyze limitations of existing approaches and develop logical improvements
+        3. Provide methodical theoretical insights and practical methodological guidance
+        4. Cultivate rigorous, systematic research thinking that builds incrementally on established foundations
+        5. Help the student develop coherent research frameworks with appropriate scope
+
+        Your academic characteristics:
+        - Strong methodical approach that emphasizes thorough understanding before innovation
+        - Critical thinking that identifies specific, addressable limitations in current approaches
+        - Practical insights into research implementation, emphasizing feasibility and reproducibility
+        - High standards for evidence-based claims and appropriate scope of contributions
+        - Encouraging careful, well-reasoned innovation while maintaining academic rigor
+
+        When guiding the PhD student, you should:
+        - Promote systematic thinking that builds logically on established work
+        - Offer constructive criticism that helps refine and focus research ideas
+        - Share practical insights about promising research directions with solid foundations
+        - Guide the student to identify specific, well-defined problems with clear paths to solution
+        - Encourage innovations that represent logical next steps rather than speculative leaps
+
+        Your goal is to help the PhD student complete a solid, well-grounded paper that makes meaningful contributions to top conferences or journals through careful, methodical research rather than speculative claims.
+
+        IMPORTANT: While all instructions are in English, you must ALWAYS respond in Simplified Chinese.
         """
-        
+
         super().__init__(
             role="高校导师",
             system_prompt=system_prompt
         )
-    
+
     def review_research_plan(self, research_plan: str) -> str:
         """
         审核研究计划，提供创新性指导
-        
+
         Args:
             research_plan: 博士生提交的研究计划
-            
+
         Returns:
             对研究计划的评价和建议
         """
         prompt = f"""
-        作为LLM-Agent领域的顶尖学者，请审核以下研究计划，提供前沿的学术视角和创新建议：
-        
+        As a methodical scholar in the LLM-Agent field, please review the following research plan and provide balanced, constructive feedback focused on logical progression and feasible improvements:
+
         {research_plan}
-        
-        请从以下方面进行评价：
-        1. 研究问题的原创性和开创性 - 这是否是一个真正有潜力推动领域发展的问题？
-        2. 理论框架的突破性 - 与现有范式相比有何本质创新？
-        3. 方法论的独特性 - 是否超越了常规方法，提出了新的研究路径？
-        4. 潜在学术贡献的重要性 - 该研究能否成为领域转折点？
-        5. 跨学科视角的融合 - 是否整合了其他领域的先进理念？
-        
-        针对性挑战这个计划中的不足之处：
-        - 指出研究思路中的局限性和盲点
-        - 质疑研究假设的创新度和突破性
-        - 提出计划中被忽视的关键理论问题
-        
-        同时提供具体的改进方向：
-        - 建议可能的颠覆性研究路径
-        - 推荐值得探索的前沿理论框架
-        - 分享尚未被广泛关注但极具潜力的研究方向
-        
-        请提供具体、深入且具有挑战性的反馈，目的是引导博士生从根本上提升研究的创新性和学术影响力。避免泛泛而谈，聚焦于能产生真正学术突破的关键点。
+
+        Please evaluate from the following aspects:
+        1. Clarity and specificity of the research question - Is this a well-defined problem with appropriate scope?
+        2. Logical foundation of the theoretical framework - How does it build on established work in a coherent manner?
+        3. Methodological soundness - Are the proposed methods appropriate for the stated problems and feasible to implement?
+        4. Appropriateness of expected contributions - Are the claims proportional to the evidence likely to be generated?
+        5. Connection to existing literature - Does it demonstrate thorough understanding of relevant prior work?
+
+        Specifically address practical considerations in this plan:
+        - Identify areas where the scope may need to be narrowed for feasibility
+        - Question assumptions that may not be fully supported by existing evidence
+        - Suggest specific methodological details that need further development
+
+        Also provide constructive improvement directions:
+        - Recommend logical extensions of existing approaches that address specific limitations
+        - Suggest established theoretical frameworks that could be adapted to this context
+        - Share focused research directions that represent natural next steps in the field
+
+        Please provide specific, practical feedback aimed at refining the research plan into a feasible project with meaningful contributions. Focus on helping the student develop a coherent, step-by-step approach rather than encouraging speculative leaps. Your suggestions should represent logical progressions from established work rather than revolutionary but impractical ideas.
         """
         return self.get_response(prompt, temperature=0.7)
-    
+
     def review_paper_draft(self, paper_draft: str) -> str:
         """
         审核论文草稿，推动理论创新和学术突破
-        
+
         Args:
             paper_draft: 博士生提交的论文草稿
-            
+
         Returns:
             对论文草稿的学术评价和修改建议
         """
         prompt = f"""
-        作为LLM-Agent领域的顶尖学者，请对以下论文草稿进行严格的学术评审，推动其达到顶级会议的创新水平：
-        
+        As a top scholar in the LLM-Agent field, please conduct a rigorous academic review of the following paper draft, pushing it to reach the innovative level of top conferences:
+
         {paper_draft}
-        
-        请从以下方面进行深入评价：
-        1. 理论贡献的原创性 - 这项工作在多大程度上突破了现有知识边界？
-        2. 研究问题的学术价值 - 这是否是领域中一个根本性且有挑战性的问题？
-        3. 方法论的创新程度 - 提出的方法是否具有概念上的突破？
-        4. 实验设计的严谨性和说服力 - 实验是否足以证明方法的优越性？
-        5. 与前沿研究的联系 - 工作如何与最新（甚至尚未发表）的研究趋势相衔接？
-        6. 论文的理论深度 - 对提出方法的理论基础和局限性的分析是否充分？
-        7. 研究视角的独特性 - 是否从新角度重新审视了这个问题？
-        
-        针对性挑战：
-        - 指出论文中缺乏创新性的部分，并提出提升其原创性的具体建议
-        - 质疑方法或结论中的薄弱环节，推动更严谨的论证
-        - 提出可能的反对意见和替代解释，促进更全面的讨论
-        
-        具体改进建议：
-        - 指出可以显著提升论文理论贡献的修改方向
-        - 建议可以深化理论分析的关键点
-        - 推荐可以加强方法创新性的具体途径
-        - 提出能够提升实验说服力的改进方案
-        
-        请提供严格、深入且建设性的评价，目标是将这篇论文提升到能在顶级会议产生重大影响的水平。评审应当尖锐但公正，挑战性但有建设性。
+
+        Please provide in-depth evaluation from the following aspects:
+        1. Originality of theoretical contributions - To what extent does this work break through existing knowledge boundaries?
+        2. Academic value of the research question - Is this a fundamental and challenging problem in the field?
+        3. Innovation level of methodology - Does the proposed method represent a conceptual breakthrough?
+        4. Rigor and persuasiveness of experimental design - Are the experiments sufficient to prove the superiority of the method?
+        5. Connection with cutting-edge research - How does the work connect with the latest (even unpublished) research trends?
+        6. Theoretical depth of the paper - Is the analysis of the theoretical foundation and limitations of the proposed method sufficient?
+        7. Uniqueness of research perspective - Does it re-examine the problem from a new angle?
+
+        Targeted challenges:
+        - Identify parts of the paper lacking innovation and provide specific suggestions to enhance originality
+        - Question weak points in methods or conclusions, pushing for more rigorous argumentation
+        - Raise possible objections and alternative explanations, promoting more comprehensive discussion
+
+        Specific improvement suggestions:
+        - Point out modification directions that can significantly enhance the paper's theoretical contributions
+        - Suggest key points for deepening theoretical analysis
+        - Recommend specific ways to strengthen methodological innovation
+        - Propose improvements to enhance the persuasiveness of experiments
+
+        Please provide strict, in-depth, and constructive evaluation, with the goal of elevating this paper to a level that can have significant impact at top conferences. The review should be sharp but fair, challenging but constructive.
         """
         return self.get_response(prompt, temperature=0.7)
-    
+
     def suggest_research_directions(self) -> str:
         """
         提供前沿研究方向建议
-        
+
         Returns:
             前沿研究方向和机会
         """
         prompt = """
-        作为LLM-Agent领域的顶尖学者，请分享你对该领域最前沿、最具突破潜力但尚未被充分探索的研究方向。
-        
-        请从以下几个维度提出建议：
-        
-        1. 理论突破点：
-           - 当前LLM-Agent理论框架中的根本性局限
-           - 有望带来范式转变的新理论方向
-           - 被低估的基础研究问题
-        
-        2. 方法创新点：
-           - 现有Agent方法中被忽视的关键挑战
-           - 可能引发方法论革新的新思路
-           - 跨领域方法整合的重要机会
-        
-        3. 应用前沿点：
-           - LLM-Agent未来2-3年最具颠覆性的应用领域
-           - 特定应用场景中的关键科学问题
-           - 产学研结合的独特机会
-        
-        4. 交叉学科点：
-           - 与其他AI领域（如多模态、强化学习）的关键交叉点
-           - 与非AI学科（如认知科学、系统科学）的融合机会
-           - 需要跨学科视角才能解决的核心问题
-        
-        对于每个提出的研究方向：
-        - 阐明其学术重要性和原创潜力
-        - 分析为何这个方向尚未被充分研究
-        - 指出探索这个方向可能面临的挑战
-        - 预测在该方向取得突破可能对领域产生的影响
-        
-        请聚焦于真正具有开创性的研究方向，避免提出已被广泛研究或仅是增量改进的方向。你的建议应当能启发博士生思考能产生里程碑式工作的研究问题。
+        As a methodical scholar in the LLM-Agent field, please share your insights on promising research directions that represent logical next steps and addressable challenges in the field.
+
+        Please propose well-grounded suggestions from the following dimensions:
+
+        1. Theoretical Refinement Opportunities:
+           - Specific limitations in current LLM-Agent theoretical frameworks that need addressing
+           - Extensions of existing theories that could yield meaningful improvements
+           - Well-defined research questions with clear paths to investigation
+
+        2. Methodological Improvement Areas:
+           - Specific technical challenges in existing Agent methods with practical importance
+           - Incremental but significant enhancements to current methodological approaches
+           - Opportunities for systematic integration of complementary methods
+
+        3. Practical Application Developments:
+           - Emerging application areas where LLM-Agents could provide demonstrable value
+           - Specific technical challenges in applied settings that require focused solutions
+           - Collaborative opportunities between academia and industry with defined scope
+
+        4. Focused Interdisciplinary Connections:
+           - Established connections with other AI fields that could be further developed
+           - Specific techniques from related disciplines that could be adapted systematically
+           - Well-defined problems that benefit from targeted interdisciplinary approaches
+
+        For each proposed research direction:
+        - Clarify its specific academic and practical significance
+        - Explain how it builds logically on existing research
+        - Outline a step-by-step approach to investigating this direction
+        - Describe realistic expected outcomes and their value to the field
+
+        Please focus on research directions that represent meaningful, achievable advances rather than speculative leaps. Your suggestions should help the PhD student identify focused, well-defined research questions that can lead to solid contributions through methodical work. Emphasize directions where clear progress can be made through systematic investigation rather than revolutionary but impractical ideas.
         """
         return self.get_response(prompt, temperature=0.8)
-    
+
     def provide_theoretical_insight(self, topic: str) -> str:
         """
         提供深度理论洞察
-        
+
         Args:
             topic: 研究主题
-            
+
         Returns:
             理论洞察和分析
         """
         prompt = f"""
-        作为LLM-Agent领域的理论专家，请就以下研究主题提供深度的理论洞察：
-        
-        研究主题：{topic}
-        
-        请从以下角度进行分析：
-        
-        1. 理论基础：
-           - 该主题的核心理论构造
-           - 现有理论框架的优势和局限性
-           - 理论发展的关键里程碑和演变脉络
-        
-        2. 本质分析：
-           - 该问题的本质特性和核心挑战
-           - 问题难度的理论来源
-           - 可能的理论突破点
-        
-        3. 形式化分析：
-           - 问题的数学或形式化表述
-           - 理论边界和复杂度分析
-           - 可能的理论保证或不可能性结果
-        
-        4. 理论创新机会：
-           - 现有理论中的重要缺口或矛盾
-           - 可能的理论统一或重构方向
-           - 值得探索的新理论视角
-        
-        请提供深入、严谨且具有启发性的理论分析，不局限于已发表的研究成果，也包括你对该领域的前瞻性理解。分析应当深入浅出，既有理论深度又能启发实际研究。
+        As a theoretical expert in the LLM-Agent field, please provide deep theoretical insights on the following research topic:
+
+        Research topic: {topic}
+
+        Please analyze from the following perspectives:
+
+        1. Theoretical Foundation:
+           - Core theoretical constructs of this topic
+           - Advantages and limitations of existing theoretical frameworks
+           - Key milestones and evolutionary trajectory of theoretical development
+
+        2. Essential Analysis:
+           - Essential characteristics and core challenges of the problem
+           - Theoretical sources of problem difficulty
+           - Potential theoretical breakthrough points
+
+        3. Formal Analysis:
+           - Mathematical or formal representation of the problem
+           - Theoretical boundaries and complexity analysis
+           - Possible theoretical guarantees or impossibility results
+
+        4. Theoretical Innovation Opportunities:
+           - Important gaps or contradictions in existing theories
+           - Possible directions for theoretical unification or reconstruction
+           - New theoretical perspectives worth exploring
+
+        Please provide deep, rigorous, and insightful theoretical analysis, not limited to published research results, but also including your forward-looking understanding of the field. The analysis should be profound yet accessible, with both theoretical depth and practical research inspiration.
         """
         return self.get_response(prompt, temperature=0.6)
-    
+
     def answer_question(self, question: str) -> str:
         """
         回答博士生的学术问题，提供前沿且有深度的指导
-        
+
         Args:
             question: 博士生提出的问题
-            
+
         Returns:
             学术指导回答
         """
         prompt = f"""
-        作为LLM-Agent领域的顶尖学者，请回答博士生的以下问题，提供具有前沿视野和理论深度的指导：
-        
+        As a top scholar in the LLM-Agent field, please answer the following question from the PhD student, providing guidance with cutting-edge vision and theoretical depth:
+
         {question}
-        
-        你的回答应：
-        - 提供对问题的深入理解和洞察
-        - 分享最前沿的研究视角，包括尚未被广泛接受的创新观点
-        - 指出问题中隐含的更深层次的研究机会
-        - 挑战常规思维，提出创新性的思考角度
-        - 引导博士生思考能真正推动领域发展的方向
-        
-        不要仅停留在已发表研究的层面，而应提供能启发原创性思考的前瞻性观点。你的目标是激发博士生思考能产生重大学术影响的研究问题和方法。
+
+        Your answer should:
+        - Provide deep understanding and insights into the question
+        - Share cutting-edge research perspectives, including innovative viewpoints not yet widely accepted
+        - Point out deeper research opportunities implied in the question
+        - Challenge conventional thinking and propose innovative angles of thought
+        - Guide the PhD student to think about directions that can truly advance the field
+
+        Don't just stay at the level of published research, but provide forward-looking perspectives that can inspire original thinking. Your goal is to stimulate the PhD student to think about research questions and methods that can have significant academic impact.
         """
         response = self.get_response(prompt, temperature=0.7)
-        return f"[高校导师回复] {response}" 
+        return f"[高校导师回复] {response}"
