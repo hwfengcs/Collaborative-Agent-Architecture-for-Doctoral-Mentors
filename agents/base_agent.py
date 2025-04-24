@@ -35,6 +35,68 @@ class BaseAgent:
         if system_prompt:
             self.conversation_history.append({"role": "system", "content": system_prompt})
 
+    def manage_history_length(self, max_tokens: int = 60000) -> None:
+        """
+        管理对话历史长度，避免超过模型的最大上下文长度限制
+
+        Args:
+            max_tokens: 最大允许的token数量
+        """
+        # 简单估算token数量（实际应用中可能需要更精确的计算方法）
+        estimated_tokens = sum(len(msg["content"]) // 3 for msg in self.conversation_history)
+
+        # 如果估算的token数量超过限制，裁剪历史
+        if estimated_tokens > max_tokens:
+            # 保留系统消息
+            system_messages = [msg for msg in self.conversation_history if msg["role"] == "system"]
+
+            # 获取非系统消息
+            non_system_messages = [msg for msg in self.conversation_history if msg["role"] != "system"]
+
+            # 计算需要保留的非系统消息数量
+            # 假设每条消息平均长度相同，计算需要移除的消息数量
+            avg_msg_tokens = estimated_tokens / len(self.conversation_history)
+            msgs_to_remove = int((estimated_tokens - max_tokens) / avg_msg_tokens) + 1
+
+            # 保留最近的消息，移除较早的消息
+            kept_messages = non_system_messages[msgs_to_remove:]
+
+            # 重建对话历史
+            self.conversation_history = system_messages + kept_messages
+
+            print(f"对话历史已裁剪，移除了{msgs_to_remove}条较早的消息")
+
+    def ensure_alternating_roles(self, messages: list) -> list:
+        """
+        确保消息序列中不会出现连续的用户或助手消息
+
+        Args:
+            messages: 消息序列
+
+        Returns:
+            处理后的消息序列
+        """
+        if len(messages) <= 1:
+            return messages
+
+        result = [messages[0]]  # 保留第一条消息（通常是系统消息）
+
+        for i in range(1, len(messages)):
+            current_msg = messages[i]
+            prev_msg = result[-1]
+
+            # 如果当前消息和前一条消息角色相同（且不是系统消息）
+            if current_msg["role"] == prev_msg["role"] and current_msg["role"] != "system":
+                # 插入一个中间消息
+                if current_msg["role"] == "user":
+                    result.append({"role": "assistant", "content": "我理解您的问题，请继续。"})
+                else:  # assistant
+                    result.append({"role": "user", "content": "请继续说明。"})
+
+            result.append(current_msg)
+
+        return result
+
     def get_response(self, message: str, temperature: float = 0.7) -> str:
         """
         获取模型回复
@@ -46,6 +108,14 @@ class BaseAgent:
         Returns:
             模型的回复
         """
+        # 管理对话历史长度
+        self.manage_history_length()
+
+        # 检查最后一条消息是否是用户消息，避免连续的用户消息
+        if self.conversation_history and self.conversation_history[-1]["role"] == "user":
+            # 插入一个助手消息，避免连续的用户消息
+            self.conversation_history.append({"role": "assistant", "content": "我理解您的问题，请继续。"})
+
         # 添加用户消息到历史
         self.conversation_history.append({"role": "user", "content": message})
 
@@ -66,6 +136,9 @@ class BaseAgent:
         # 如果没有系统消息但有系统提示词，添加一个
         if not system_message_found and self.system_prompt:
             messages_to_send.insert(0, {"role": "system", "content": self.system_prompt})
+
+        # 确保消息序列中不会出现连续的用户或助手消息
+        messages_to_send = self.ensure_alternating_roles(messages_to_send)
 
         # 调用API获取回复
         try:
@@ -94,6 +167,18 @@ class BaseAgent:
             role: 消息的角色 (system, user, assistant)
             content: 消息内容
         """
+        # 管理对话历史长度
+        self.manage_history_length()
+
+        # 检查是否会导致连续相同角色的消息
+        if self.conversation_history and self.conversation_history[-1]["role"] == role and role != "system":
+            # 插入一个中间消息
+            if role == "user":
+                self.conversation_history.append({"role": "assistant", "content": "我理解您的问题，请继续。"})
+            elif role == "assistant":
+                self.conversation_history.append({"role": "user", "content": "请继续说明。"})
+
+        # 添加消息到历史
         self.conversation_history.append({"role": role, "content": content})
 
     def clear_history(self, keep_system_prompt: bool = True) -> None:
@@ -199,11 +284,30 @@ class BaseAgent:
         if not memories_to_inject:
             return
 
-        # 构建记忆内容
+        # 构建记忆内容，但限制长度以避免超出上下文限制
         memory_content = "以下是之前阶段的关键总结，请参考这些信息：\n\n"
 
+        # 估计每个记忆的token数量，并限制总量
+        max_memory_tokens = 20000  # 为记忆分配的最大token数
+        current_tokens = 0
+
         for memory in memories_to_inject:
-            memory_content += f"--- {memory['phase']} 阶段总结 ---\n{memory['content']}\n\n"
+            # 估算当前记忆的token数量
+            memory_text = f"--- {memory['phase']} 阶段总结 ---\n{memory['content']}\n\n"
+            estimated_tokens = len(memory_text) // 3  # 简单估算
+
+            # 如果添加这个记忆会超出限制，则跳过
+            if current_tokens + estimated_tokens > max_memory_tokens:
+                memory_content += "...(部分较早的记忆已省略)...\n\n"
+                break
+
+            memory_content += memory_text
+            current_tokens += estimated_tokens
 
         # 将记忆作为系统消息注入到对话历史中
+        # 先清除之前的记忆系统消息，避免重复
+        self.conversation_history = [msg for msg in self.conversation_history
+                                    if not (msg["role"] == "system" and "阶段总结" in msg.get("content", ""))]
+
+        # 添加新的记忆系统消息
         self.add_message_to_history("system", memory_content)
