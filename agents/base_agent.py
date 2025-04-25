@@ -11,7 +11,7 @@ class BaseAgent:
         self,
         role: str,
         system_prompt: str,
-        model: str = "deepseek-reasoner"
+        model: str = "deepseek-chat"
     ):
         """
         初始化Agent

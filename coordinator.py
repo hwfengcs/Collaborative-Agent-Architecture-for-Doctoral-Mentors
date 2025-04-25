@@ -271,13 +271,9 @@ class AgentCoordinator:
         knowledge_query = "在LLM-Agent与数据挖掘结合的场景中，有哪些关键技术挑战和最新解决方案？"
         self.add_to_history("博士生", f"我想咨询一下专业知识: {knowledge_query}")
 
-        knowledge_response = self.knowledge_module.consult_llm(knowledge_query, use_reasoning=True)
-        if isinstance(knowledge_response, dict):
-            # 对于推理模型的输出
-            self.add_to_history("知识获取模块", f"思考过程: {knowledge_response['reasoning']}\n\n回答: {knowledge_response['answer']}")
-        else:
-            # 对于普通输出
-            self.add_to_history("知识获取模块", f"回答: {knowledge_response}")
+        knowledge_response = self.knowledge_module.consult_llm(knowledge_query)
+        # 直接添加回答到历史
+        self.add_to_history("知识获取模块", f"回答: {knowledge_response}")
 
         # 博士生提出研究方法问题
         method_question = self.phd_student.ask_question(

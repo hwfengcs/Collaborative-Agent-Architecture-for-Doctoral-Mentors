@@ -6,7 +6,7 @@ class KnowledgeRetrievalModule:
     """
     知识获取模块，负责论文检索和LLM咨询
     """
-    def __init__(self, model: str = "deepseek-reasoner"):
+    def __init__(self, model: str = "deepseek-chat"):
         """
         初始化知识获取模块
 
@@ -111,13 +111,11 @@ class KnowledgeRetrievalModule:
 
         Args:
             query: 咨询问题
-            use_reasoning: 是否使用推理模型
+            use_reasoning: 此参数保留但不再使用，因为deepseek-chat不支持推理功能
 
         Returns:
             LLM的回答
         """
-        model = "deepseek-reasoner" if use_reasoning else self.model
-
         # 系统提示词
         system_prompt = """你是一位既有学术背景又有工业界经验的AI研究顾问，专注于LLM-Agent与互联网数据挖掘的交叉领域研究。你提供的建议应基于实证研究和已发表文献，注重实际应用场景和可量化的业务价值。"""
 
@@ -142,7 +140,7 @@ class KnowledgeRetrievalModule:
         try:
             # 确保系统消息在消息序列的开头
             response = self.client.chat.completions.create(
-                model=model,
+                model=self.model,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
@@ -150,20 +148,8 @@ class KnowledgeRetrievalModule:
                 temperature=0.3  # 较低的温度以获得更准确的知识
             )
 
-            # 对于推理模型，获取reasoning_content和content
-            if use_reasoning:
-                try:
-                    reasoning = response.choices[0].message.reasoning_content
-                    answer = response.choices[0].message.content
-                    return {
-                        "reasoning": reasoning,
-                        "answer": answer
-                    }
-                except AttributeError:
-                    # 如果模型不支持reasoning_content，则只返回content
-                    return response.choices[0].message.content
-            else:
-                return response.choices[0].message.content
+            # 直接返回内容
+            return response.choices[0].message.content
 
         except Exception as e:
             error_message = f"LLM咨询出错: {str(e)}"
